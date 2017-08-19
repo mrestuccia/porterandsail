@@ -1,5 +1,4 @@
 const faker = require('faker');
-const path = require('path');
 
 const conn = require('./db');
 
@@ -33,6 +32,8 @@ PlaceTags.belongsTo(Place, { onDelete: 'CASCADE' });
 PlaceTags.belongsTo(Tag, { onDelete: 'CASCADE' });
 Place.hasMany(PlaceTags);
 Tag.hasMany(PlaceTags);
+
+const sync = () => conn.sync({ force: true });
 
 
 const seed = () => {
@@ -90,8 +91,8 @@ const seed = () => {
       // Add User to Places (likes)
       for (let i = 0; i < numUsers; i++) {
         for (let j = 0; j < numUserPlaces; j++) {
-          const tagId = Math.floor(Math.random() * (numPlaces - 1)) + 1;
-          userPlaces.push(UserPlaces.create({ userId: i + 1, tagId: tagId }));
+          const placeId = Math.floor(Math.random() * (numPlaces - 1)) + 1;
+          userPlaces.push(UserPlaces.create({ userId: i + 1, placeId: placeId }));
         }
       }
       return Promise.all(userPlaces);
@@ -99,8 +100,6 @@ const seed = () => {
 
 
 };
-
-const sync = () => conn.sync({ force: true });
 
 module.exports = {
   models: {
