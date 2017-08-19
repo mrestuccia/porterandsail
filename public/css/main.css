@@ -1,8 +1,17 @@
 #logo {
-  height:50px;
+  height:60px;
+  margin-top: 5px;
 }
 
-#header {
-  margin-left: auto;
-  margin-right: auto;
+body{
+  font-family: 'Raleway', sans-serif;
+}
+
+#tags{
+  font-size:x-small;
+  color:gray;
+}
+
+li{
+  margin-bottom:1em;
 }
