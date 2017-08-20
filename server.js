@@ -15,7 +15,6 @@ app.use('/api', require('./api/'));
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 
-
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Port ${port} is a beautiful port`));

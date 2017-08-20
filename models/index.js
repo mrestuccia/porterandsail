@@ -40,8 +40,8 @@ const seed = () => {
   let users = [], places = [], tags = [];
   let userPlaces = [], placesTags = [], hotelPlaces = [];
   let numUsers = 50;
-  let numPlaces = 1000;
-  let numTags = 100;
+  let numPlaces = 80;
+  let numTags = 50;
   let numTagsPlaces = 5;
   let numUserPlaces = 5;
 
