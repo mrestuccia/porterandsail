@@ -16,17 +16,27 @@ class UserContainer extends Component {
   componentWillMount() {
     if (!this.props) return;
     this.props.loadFavoritesUser(this.props.params.userId);
-    this.props.loadFavoritesUser(this.props.params.userId);
+    this.props.loadRecommendationsUser(this.props.params.userId);
   }
 
 
   render() {
     const { favorites, recommendations } = this.props;
     return (
-      <div>
-        <Welcome />
-        <Favorites favorites={favorites} />
-        <Recommendations recomendations={recommendations} />
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <Welcome />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <Favorites favorites={favorites} />
+          </div>
+          <div className="col-md-6">
+            <Recommendations recommendations={recommendations} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -37,6 +47,7 @@ const mapStateToProps = (state) => {
   return (
     {
       favorites: state.user.favorites,
+      recommendations: state.user.recommendations
     }
   );
 };

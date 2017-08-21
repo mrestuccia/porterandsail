@@ -12,9 +12,9 @@ const loadFavoritesUserSuccess = (favorites) => ({
   favorites
 });
 
-const loadRecommendationsUserSuccess = (recomendations) => ({
+const loadRecommendationsUserSuccess = (recommendations) => ({
   type: LOAD_USER_RECOMMENDATIONS_SUCCESS,
-  recomendations
+  recommendations
 });
 
 
@@ -34,10 +34,10 @@ const loadFavoritesUser = (id) => {
 
 const loadRecommendationsUser = (id) => {
   return (dispatch) => {
-    axios.get(`/api/user/${id||1}/recomendations/1`)
+    axios.get(`/api/user/${id||1}/recommendations/1`)
       .then(response => response.data)
-      .then(recommendation => {
-        dispatch(loadRecommendationsUserSuccess(recommendation));
+      .then(recommendations => {
+        dispatch(loadRecommendationsUserSuccess(recommendations));
       })
       .catch(err => console.log(err));
   };

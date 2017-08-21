@@ -26,6 +26,8 @@ const sortObject = (obj) => {
   });
 };
 
+
+// Places by hotel not selected by the user
 const findPlace = (hotelId, tagName, arrPlaces) => {
   return models.HotelPlaces.findAll(
     {
@@ -56,6 +58,37 @@ const findPlace = (hotelId, tagName, arrPlaces) => {
     });
 };
 
+
+// Place by Name
+const placeByName = (placeName) => {
+  return models.Place.findOne(
+    {
+      include: [
+        {
+          model: models.PlaceTags,
+          include: [
+            {
+              model: models.Tag,
+            }
+          ]
+        }
+      ],
+      where:
+      {
+        name: placeName
+      }
+    });
+};
+
+// GET
+// Get the user and their tags
+router.get('/:userId', (req, res, next) => {
+  const _userId = req.params.userId;
+  models.UserPlaces.getUserPlacesById(_userId)
+    .then(userPlaces => {
+      res.send(userPlaces);
+    });
+});
 
 // GET
 // User Likes on a given hotel
@@ -94,7 +127,7 @@ router.get('/:userId/likes/:hotelId', (req, res, next) => {
 });
 
 // Recommendations for User on a given hotel
-router.get('/:userId/recommend/:hotelId', (req, res, next) => {
+router.get('/:userId/recommendations/:hotelId', (req, res, next) => {
   const _userId = req.params.userId;
   const _hotelId = req.params.hotelId;
 
@@ -125,9 +158,9 @@ router.get('/:userId/recommend/:hotelId', (req, res, next) => {
   })
     .then(userPlaces => {
       var arrTags = [];
-      var arrUserPlaces = {};
+      var arrUserPlaces = [];
       userPlaces.forEach(userPlace => {
-        arrUserPlaces[userPlace.place.name] = userPlace.place;
+        arrUserPlaces.push(userPlace.place.id);
         userPlace.place.placetags.forEach(placetags => {
           arrTags.push(placetags.tag.name);
         });
@@ -138,7 +171,6 @@ router.get('/:userId/recommend/:hotelId', (req, res, next) => {
 
       // Find places related to the hotel by tag sorted by weight
       var arrResult = objSorted.map(tagName => {
-        console.log(tagName[0]);
         return findPlace(_hotelId, tagName[0], arrUserPlaces);
       });
 
@@ -151,8 +183,12 @@ router.get('/:userId/recommend/:hotelId', (req, res, next) => {
           });
           recomendedPlace = sortObject(statWords(recomendedPlace));
 
-          recomendedPlace = recomendedPlace.map(item => hotelPlaces[item[0]]);
-          res.send(recomendedPlace);
+          Promise.all(recomendedPlace.map(item => {
+            return placeByName(item[0]);
+          }))
+            .then(rPlace => {
+              res.send(rPlace.slice(0, 5));
+            });
         });
     });
 });
