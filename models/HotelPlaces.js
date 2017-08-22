@@ -8,7 +8,7 @@ const Tag = require('./Tag');
 const HotelPlaces = conn.define('hotelplaces', {
 }, {
     classMethods: {
-      findByTag: function(hotelId, tagName, arrPlaces) {
+      findByTag: function (hotelId, tagName, arrPlaces) {
         return HotelPlaces.findAll(
           {
             include: [
@@ -36,6 +36,9 @@ const HotelPlaces = conn.define('hotelplaces', {
               hotelId: hotelId
             }
           });
+      },
+      findByTags: function (hotelId, tags, arrPlaces) {
+        return Promise.all(tags.map(tag => this.findByTag(hotelId, tag, arrPlaces)));
       }
     }
   });

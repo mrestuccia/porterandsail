@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const models = require('../models').models;
 const { statWords, sortObject } = require('./utils');
+const Recommendations = require('./recommendations');
 
 
 // GET
@@ -15,7 +16,7 @@ router.get('/:userId', (req, res, next) => {
       models.UserPlaces.getAllUserPlacesAndTags(user.id)
         .then(userPlacesAndTags => {
 
-           let wordFrequencySorted = sortObject(statWords(userPlacesAndTags.tags));
+          let wordFrequencySorted = sortObject(statWords(userPlacesAndTags.tags));
           // Send back the user and the tags
           res.send({ info: user, tags: wordFrequencySorted });
         });
@@ -41,36 +42,25 @@ router.get('/:userId/likes/:hotelId', (req, res, next) => {
 router.get('/:userId/recommendations/:hotelId', (req, res, next) => {
   const _userId = req.params.userId;
   const _hotelId = req.params.hotelId;
+  let recommend;
 
   // Create a list of tags sorted by repetition.
   models.UserPlaces.getAllUserPlacesAndTags(_userId)
     .then(userPlacesAndTags => {
 
-      // Find all the tags and their frequency sorted
-      let wordFrequencySorted = sortObject(statWords(userPlacesAndTags.tags));
+      // Create the recomendation class and the tags and user likes
+      recommend = new Recommendations(userPlacesAndTags);
 
-      // Map Hotel Places with those tags
-      return Promise.all(wordFrequencySorted.map(tagName => {
-        return models.HotelPlaces.findByTag(_hotelId, tagName[0], userPlacesAndTags.places);
-      }));
+      // Return the hotel places that match those tags
+      return models.HotelPlaces.findByTags(_hotelId, recommend.getSortedTags(), recommend.getPlaces());
     })
-    .then(arr => {
-      // Extact the Place Names
-      let recomendedPlace = arr.map(item => {
-        return item[0].place.name;
-      });
+    .then(hotelPlaces => {
 
-      // Count Words frequency and Sort
-      recomendedPlace = sortObject(statWords(recomendedPlace));
+      // Set the places on the class recommend and sort by repetition
+      recommend.setHotelPLaces(hotelPlaces);
 
-      // Get back the places with their tags
-      return Promise.all((recomendedPlace.map(item => {
-        return models.Place.placeByName(item[0]);
-      })));
-    })
-    .then(recomendedPlace => {
-      // Send only the first 5
-      res.send(recomendedPlace.slice(0, 5));
+      // Send the firt 5
+      res.send(recommend.getHotelPlaces().slice(0, 5));
     });
 });
 
