@@ -17,7 +17,7 @@ const HotelRecommendation = ({ recommendations }) => {
                   <div id="tags">
                     {
                       recomended.placetags.map(placetag => (
-                        <span className="pills"> {placetag.tag.name} </span>
+                        <span key={placetag.id} className="pills"> {placetag.tag.name} </span>
                       ))
                     }
                   </div>

@@ -11,7 +11,7 @@ const UserPlaces = conn.define('userplaces', {},
 
       getUserPlacesById: function (userId) {
         return UserPlaces.findAll(
-          { where: { userId: userId }})
+          { where: { userId: userId } })
           .then(function (userPlaces) {
             return userPlaces.map(function (userPlace) {
               return userPlace.placeId;
@@ -69,7 +69,7 @@ const UserPlaces = conn.define('userplaces', {},
           }
         });
       },
-      getAllUserPlacesAndTags: function (_userId) {
+      getPlacesAndTagsByUser: function (_userId) {
         let arrUserPlaces = [];
         let arrTags = [];
         return UserPlaces.findAll({
@@ -99,6 +99,28 @@ const UserPlaces = conn.define('userplaces', {},
             });
 
             return { places: arrUserPlaces, tags: arrTags };
+          });
+      },
+      getAllUserAndPlacesByHotel: function (hotelId) {
+        return UserPlaces.findAll({
+          include: [
+            {
+              model: Place,
+              required: true,
+              include: [
+                {
+                  model: HotelPlaces,
+                  required: true,
+                  where: { hotelId: hotelId }
+                }
+              ]
+            }
+          ]
+        })
+          .then(function (userPlaces) {
+            return userPlaces.map(userPlace => {
+              return { userId: userPlace.userId, placeName: userPlace.place.name };
+            });
           });
       }
     }

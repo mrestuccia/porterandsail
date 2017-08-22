@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import userReducer, {loadFavoritesUser} from './userReducer';
+import userReducer from './userReducer';
 
 const combined = combineReducers({
   user: userReducer
@@ -19,8 +19,5 @@ if (reduxDevtools) {
     store = createStore(combined, applyMiddleware(thunk));
 }
 
-// Init
-//console.log('store', this.props.location.query);
-store.dispatch(loadFavoritesUser());
 
 export default store;

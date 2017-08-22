@@ -10,7 +10,7 @@ const WelcomeUser = ({ info, tags }) => {
           <div id="welcome">
             {
               tags.map((item, idx) => (
-                <span id="idx" className="pills">{item}</span>
+                <span key={idx} className="pills">{item}</span>
               ))
             }
           </div>
@@ -21,5 +21,3 @@ const WelcomeUser = ({ info, tags }) => {
 };
 
 export default WelcomeUser;
-
-// `${item[0]}(${item[1]})`).join(' ')

@@ -5,38 +5,42 @@ import { connect } from 'react-redux';
 import Welcome from '../components/welcome';
 import Favorites from '../components/favorites';
 import Recommendations from '../components/recommendations';
+import Predictions from '../components/predictions';
 
 
 // Reducer
-import { loadFavoritesUser, loadRecommendationsUser, loadUser } from '../redux/userReducer';
+import { loadFavoritesUser, loadRecommendationsUser, loadUser, loadPredictionsUser } from '../redux/userReducer';
 
 
 class UserContainer extends Component {
 
   componentWillMount() {
     if (!this.props) return;
-    this.props.loadFavoritesUser(this.props.params.userId);
-    this.props.loadRecommendationsUser(this.props.params.userId);
     this.props.loadUser(this.props.params.userId);
   }
 
 
   render() {
-    const { favorites, recommendations, info, tags } = this.props;
+    const { favorites, recommendations, predictions, info, tags } = this.props;
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <Welcome info={ info } tags={ tags } />
+            <Welcome info={info} tags={tags} />
           </div>
         </div>
         <div className="row">
           <div className="col-md-6">
-            <Favorites favorites={ favorites } />
+            <Favorites favorites={favorites} />
           </div>
           <div className="col-md-6">
-            <Recommendations recommendations={ recommendations } />
+            <Recommendations recommendations={recommendations} />
           </div>
+
+          <div className="col-md-6">
+            <Predictions predictions={predictions} />
+          </div>
+
         </div>
       </div>
     );
@@ -47,10 +51,11 @@ class UserContainer extends Component {
 const mapStateToProps = (state) => {
   return (
     {
+      info: state.user.info,
+      tags: state.user.tags,
       favorites: state.user.favorites,
       recommendations: state.user.recommendations,
-      info: state.user.info,
-      tags: state.user.tags
+      predictions: state.user.predictions
     }
   );
 };
@@ -58,9 +63,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return (
     {
-      loadFavoritesUser: (id) => dispatch(loadFavoritesUser(id)),
-      loadRecommendationsUser: (id) => dispatch(loadRecommendationsUser(id)),
-      loadUser: (id) => dispatch(loadUser(id))
+      loadUser: (id) => {
+        dispatch(loadUser(id))
+          .then(() => dispatch(loadFavoritesUser(id)))
+          .then(() => dispatch(loadRecommendationsUser(id)))
+          .then(() => dispatch(loadPredictionsUser(id)));
+      }
     }
   );
 };

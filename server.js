@@ -13,7 +13,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/api', require('./api/'));
 
-app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, 'index.html')));
 
 const port = process.env.PORT || 3000;
 
