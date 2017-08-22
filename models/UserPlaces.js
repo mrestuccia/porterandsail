@@ -1,14 +1,104 @@
 const conn = require('./db');
 
+const Place = require('./Place');
+const PlaceTags = require('./PlaceTags');
+const Tag = require('./Tag');
+const HotelPlaces = require('./HotelPlaces');
+
 const UserPlaces = conn.define('userplaces', {},
   {
     classMethods: {
-      getUserPlacesById: function (id) {
-        return UserPlaces.findAll({ where: { userId: id } })
-          .then(function (_userPlaces) {
-            return _userPlaces.map(function (_userPlace) {
-              return _userPlace.place.id;
+
+      getUserPlacesById: function (userId) {
+        return UserPlaces.findAll(
+          { where: { userId: userId }})
+          .then(function (userPlaces) {
+            return userPlaces.map(function (userPlace) {
+              return userPlace.placeId;
             });
+          });
+      },
+
+      getUserPlacesByHotel: function (_userId, _hotelId) {
+        return UserPlaces.findAll({
+          include: [
+            {
+              model: Place,
+              required: true,
+              include: [
+                {
+                  model: PlaceTags,
+                  include: [
+                    { model: Tag }
+                  ]
+                },
+                {
+                  model: HotelPlaces,
+                  where: { hotelId: _hotelId }
+                }
+              ]
+            }
+          ],
+          where: {
+            userId: _userId
+          }
+        });
+      },
+
+      getByHotel: function (_userId, _hotelId) {
+        return UserPlaces.findAll({
+          include: [
+            {
+              model: Place,
+              include: [
+                {
+                  model: PlaceTags,
+                  include: [
+                    { model: Tag }
+                  ]
+                },
+                {
+                  model: HotelPlaces,
+                  where: { hotelId: _hotelId }
+                }
+              ]
+            }
+          ],
+          where: {
+            userId: _userId
+          }
+        });
+      },
+      getAllUserPlacesAndTags: function (_userId) {
+        let arrUserPlaces = [];
+        let arrTags = [];
+        return UserPlaces.findAll({
+          include: [
+            {
+              model: Place,
+              include: [
+                {
+                  model: PlaceTags,
+                  include: [
+                    { model: Tag }
+                  ]
+                }
+              ]
+            }
+          ],
+          where: {
+            userId: _userId
+          }
+        })
+          .then(function (userPlaces) {
+            userPlaces.forEach(userPlace => {
+              arrUserPlaces.push(userPlace.place.id);
+              userPlace.place.placetags.forEach(placetags => {
+                arrTags.push(placetags.tag.name);
+              });
+            });
+
+            return { places: arrUserPlaces, tags: arrTags };
           });
       }
     }

@@ -2,9 +2,6 @@ import React from 'react';
 
 const HotelFavorites = ({ favorites }) => {
 
-  console.log('HotelFavorites=>', favorites);
-
-
   if (!favorites) return null;
 
   return (
@@ -20,8 +17,8 @@ const HotelFavorites = ({ favorites }) => {
                   <div id="tags">
                     {
                       favorite.place.placetags.map(placetag => (
-                        '#' + placetag.tag.name
-                      )).join(' ')
+                        <span className="pills"> {placetag.tag.name} </span>
+                      ))
                     }
                   </div>
                 </li>

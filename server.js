@@ -17,6 +17,6 @@ app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html'))
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Port ${port} is a beautiful port`));
+app.listen(port, () => console.log(`Server listening on port ${port}`));
 
 db.seed();

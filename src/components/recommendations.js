@@ -2,8 +2,6 @@ import React from 'react';
 
 const HotelRecommendation = ({ recommendations }) => {
 
-  console.log('recommendations', recommendations);
-
   if (!recommendations) return null;
 
   return (
@@ -19,8 +17,8 @@ const HotelRecommendation = ({ recommendations }) => {
                   <div id="tags">
                     {
                       recomended.placetags.map(placetag => (
-                        '#' + placetag.tag.name
-                      )).join(' ')
+                        <span className="pills"> {placetag.tag.name} </span>
+                      ))
                     }
                   </div>
                 </li>

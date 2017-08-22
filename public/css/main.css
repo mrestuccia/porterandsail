@@ -1,18 +1,31 @@
+body{
+  font-family: 'Raleway', sans-serif;
+}
+
 #logo {
   height:60px;
   margin-top: 3vh;
   margin-left:-0.1vw;
 }
 
-body{
-  font-family: 'Raleway', sans-serif;
-}
-
 #tags{
+  display:block;
   font-size:x-small;
   color:gray;
 }
 
 li{
   margin-bottom:1em;
+}
+
+#welcome .pills{
+  float: left;
+}
+
+.pills {
+  border: 1px solid lightgray;
+  margin: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size:x-small;
 }

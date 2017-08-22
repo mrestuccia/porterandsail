@@ -2,9 +2,9 @@ import axios from 'axios';
 import store from './store';
 
 // Constants
-const LOAD_USER_FAVORITES_SUCCESS = 'LOAD_USER_SUCCESS';
+const LOAD_USER_FAVORITES_SUCCESS = 'LOAD_USER_FAVORITES_SUCCESS';
 const LOAD_USER_RECOMMENDATIONS_SUCCESS = 'LOAD_USER_RECOMMENDATIONS_SUCCESS';
-
+const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
 
 // Actions
 const loadFavoritesUserSuccess = (favorites) => ({
@@ -15,6 +15,11 @@ const loadFavoritesUserSuccess = (favorites) => ({
 const loadRecommendationsUserSuccess = (recommendations) => ({
   type: LOAD_USER_RECOMMENDATIONS_SUCCESS,
   recommendations
+});
+
+const loadUserSuccess = (client) => ({
+  type: LOAD_USER_SUCCESS,
+  client
 });
 
 
@@ -43,6 +48,19 @@ const loadRecommendationsUser = (id) => {
   };
 };
 
+const loadUser = (id) => {
+  return (dispatch) => {
+    axios.get(`/api/user/${id||1}`)
+      .then(response => response.data)
+      .then(client => {
+        dispatch(loadUserSuccess(client));
+      })
+      .catch(err => console.log(err));
+  };
+};
+
+
+
 
 
 // Reducer
@@ -56,6 +74,9 @@ const userReducer = (state = initialState, action) => {
     case LOAD_USER_RECOMMENDATIONS_SUCCESS:
       console.log('LOAD_USER_RECOMENDATIONS_SUCCESS', action.recommendations);
       return { ...state, recommendations: action.recommendations }
+    case LOAD_USER_SUCCESS:
+      console.log('LOAD_USER_SUCCESS', action.client);
+      return { ...state, ...action.client }
   }
   return state
 };
@@ -63,7 +84,8 @@ const userReducer = (state = initialState, action) => {
 
 export {
   loadFavoritesUser, 
-  loadRecommendationsUser
+  loadRecommendationsUser,
+  loadUser
 };
 
 export default userReducer;
