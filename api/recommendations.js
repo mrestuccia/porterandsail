@@ -46,6 +46,10 @@ class Recommendations {
     return this.sorted.map(item => item[0]);
   }
 
+  getTags() {
+    return this.tags;
+  }
+
   getSorted() {
     return this.sorted;
   }

@@ -8,6 +8,7 @@ const Recommendations = require('./recommendations');
 // Get the user and his tags
 router.get('/:userId', (req, res, next) => {
   const userId = req.params.userId;
+  let recommend;
 
   // Find the user
   models.User.findById(userId)
@@ -16,11 +17,13 @@ router.get('/:userId', (req, res, next) => {
       models.UserPlaces.getAllUserPlacesAndTags(user.id)
         .then(userPlacesAndTags => {
 
-          let wordFrequencySorted = sortObject(statWords(userPlacesAndTags.tags));
+          recommend = new Recommendations(userPlacesAndTags);
+
           // Send back the user and the tags
-          res.send({ info: user, tags: wordFrequencySorted });
+          res.send({ info: user, tags: recommend.getTags() });
         });
-    });
+    })
+    .catch(next);
 });
 
 // GET
@@ -48,20 +51,26 @@ router.get('/:userId/recommendations/:hotelId', (req, res, next) => {
   models.UserPlaces.getAllUserPlacesAndTags(_userId)
     .then(userPlacesAndTags => {
 
-      // Create the recomendation class and the tags and user likes
+      // Create the recomendation classs and pass the tags and user places
       recommend = new Recommendations(userPlacesAndTags);
-
-      // Return the hotel places that match those tags
       return models.HotelPlaces.findByTags(_hotelId, recommend.getSortedTags(), recommend.getPlaces());
     })
     .then(hotelPlaces => {
-
-      // Set the places on the class recommend and sort by repetition
       recommend.setHotelPLaces(hotelPlaces);
+      return recommend.getHotelPlaces();
+    })
+    .then(hotelPlaces => {
 
-      // Send the firt 5
-      res.send(recommend.getHotelPlaces().slice(0, 5));
-    });
+      // Get back the places with their tags
+      return Promise.all((hotelPlaces.map(item => {
+        return models.Place.placeByName(item);
+      })));
+    })
+    .then(recomendedPlace => {
+      // Send only the first 5
+      res.send(recomendedPlace.slice(0, 5));
+    })
+    .catch(next);
 });
 
 module.exports = router;
