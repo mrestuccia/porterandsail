@@ -33,7 +33,7 @@ PlaceTags.belongsTo(Tag, { onDelete: 'CASCADE' });
 Place.hasMany(PlaceTags);
 Tag.hasMany(PlaceTags);
 
-const sync = () => conn.sync({ force: true });
+const sync = () => conn.sync({ force: false });
 
 
 const seed = () => {
