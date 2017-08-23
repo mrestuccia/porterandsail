@@ -7,16 +7,16 @@
 # Folder Structure
         /api--> Server: End point implementation
 
-        /dist --> Client: Resulting of webpack compilation in one single javascript file
+        /dist --> Client: Webpack bundle file
 
         /models --> Server: Database models
 
-        /public --> Files directly served
+        /public --> Static files
 
         /src --> Client: This is the React code
         
-                /component: the components.
+                /component: React components.
  
-                /containers: container of the components
+                /containers: Containers of the components
   
-                /redux: the redux store.
+                /redux: Redux store.
