@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "npm run webpack",
     "webpack": "./node_modules/webpack/bin/webpack.js",
-    "start:dev": "npm run webpack -- -w & DATABASE_URL=postgres://localhost/porterandsail nodemon --ignore dist/ --ignore src/ server.js"
+    "start:dev": "npm run webpack -- -w & SEED=true DATABASE_URL=postgres://localhost/porterandsail nodemon --ignore dist/ --ignore src/ server.js"
   },
   "keywords": [],
   "author": "",

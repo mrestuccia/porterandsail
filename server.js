@@ -17,6 +17,13 @@ app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, 'index.html')
 
 const port = process.env.PORT || 3000;
 
+// Start the db connection
+if (process.env.SEED) {
+  db.seed();
+} else {
+  db.sync();
+}
+
+// Start the Web Server
 app.listen(port, () => console.log(`Server listening on port ${port}`));
 
-db.seed();
