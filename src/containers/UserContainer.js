@@ -5,23 +5,22 @@ import { connect } from 'react-redux';
 import Welcome from '../components/welcome';
 import Favorites from '../components/favorites';
 import Recommendations from '../components/recommendations';
-import Predictions from '../components/predictions';
 
 
 // Reducer
-import { loadFavoritesUser, loadRecommendationsUser, loadUser, loadPredictionsUser } from '../redux/userReducer';
+import { loadFavoritesUser, loadRecommendationsUser, loadUser } from '../redux/userReducer';
 
 
 class UserContainer extends Component {
 
   componentWillMount() {
     if (!this.props) return;
-    this.props.loadUser(this.props.params.userId);
+    this.props.loadAll(this.props.params.userId);
   }
 
 
   render() {
-    const { favorites, recommendations, predictions, info, tags } = this.props;
+    const { favorites, recommendations, info, tags } = this.props;
     return (
       <div className="container">
         <div className="row">
@@ -36,11 +35,6 @@ class UserContainer extends Component {
           <div className="col-md-6">
             <Recommendations recommendations={recommendations} />
           </div>
-
-          <div className="col-md-6">
-            <Predictions predictions={predictions} />
-          </div>
-
         </div>
       </div>
     );
@@ -54,8 +48,7 @@ const mapStateToProps = (state) => {
       info: state.user.info,
       tags: state.user.tags,
       favorites: state.user.favorites,
-      recommendations: state.user.recommendations,
-      predictions: state.user.predictions
+      recommendations: state.user.recommendations
     }
   );
 };
@@ -63,11 +56,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return (
     {
-      loadUser: (id) => {
+      loadAll: (id) => {
         dispatch(loadUser(id))
           .then(() => dispatch(loadFavoritesUser(id)))
-          .then(() => dispatch(loadRecommendationsUser(id)))
-          .then(() => dispatch(loadPredictionsUser(id)));
+          .then(() => dispatch(loadRecommendationsUser(id)));
       }
     }
   );
