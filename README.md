@@ -1,21 +1,22 @@
 # Porter & Sail
 
-        Create a DB
+        psql > createdb porterandsail
         npm install
         npm run start:dev
 
 # Folder Structure
-/api--> Server: End point implementation
+        /api--> Server: End point implementation
 
-/dist --> Client: Resulting of webpack compilation in one single javascript file
+        /dist --> Client: Resulting of webpack compilation in one single javascript file
 
-/models --> Server: Database models
+        /models --> Server: Database models
 
-/public --> Files directly served
+        /public --> Files directly served
 
-/src --> Client: This is the React code
-  /component: the components.
+        /src --> Client: This is the React code
+        
+                /component: the components.
  
-  /containers: container of the components
+                /containers: container of the components
   
-  /redux: the redux store.
+                /redux: the redux store.
